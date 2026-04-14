@@ -1,0 +1,9 @@
+smartquark:
+  name: SmartQuark Java Edition
+  version: 0.0.1
+quarkus:
+  application:
+    name: ${smartquark.name}
+    version: ${smartquark.version}
+  banner:
+    path: banner.txt
