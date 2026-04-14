@@ -24,10 +24,18 @@ import java.util.List;
 @Slf4j
 public class StartupService
 {
-    @Inject
-    SmartQuarkConfig config;
+    private final SmartQuarkConfig config;
+    private final DBInitializer dbInitializer;
 
-    @ConfigProperty(name="quarkus.http.port")
+    @Inject
+    public StartupService(SmartQuarkConfig config,
+                          DBInitializer dbInitializer)
+    {
+        this.config = config;
+        this.dbInitializer = dbInitializer;
+    }
+
+    @ConfigProperty(name = "quarkus.http.port")
     int port;
 
     void onStart(@Observes StartupEvent ev)
@@ -38,6 +46,7 @@ public class StartupService
                 "Listening on: http://localhost:" + port
         );
         TitleLogger.getInstance().logTitle(log, info);
+        this.dbInitializer.populateDB();
     }
 
     void onStop(@Observes ShutdownEvent ev)

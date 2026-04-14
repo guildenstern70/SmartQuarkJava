@@ -7,3 +7,12 @@ quarkus:
     version: ${smartquark.version}
   banner:
     path: banner.txt
+  console:
+    color: true
+  datasource:
+    db-kind: postgresql
+  log:
+    level: INFO
+    console:
+      format: "%d{HH:mm:ss} %-5p [%c{2.}] %s%e%n"
+      level: DEBUG
