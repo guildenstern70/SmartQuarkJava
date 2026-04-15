@@ -24,6 +24,8 @@ dependencies {
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-hibernate-orm")
     implementation("io.quarkus:quarkus-config-yaml")
+    implementation("io.quarkus:quarkus-qute")
+    implementation("io.quarkus:quarkus-rest-qute")
     implementation("org.mapstruct:mapstruct:1.6.3")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
     testImplementation("io.quarkus:quarkus-junit")
