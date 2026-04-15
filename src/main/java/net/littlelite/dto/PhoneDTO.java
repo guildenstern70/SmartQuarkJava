@@ -7,8 +7,9 @@
 
 package net.littlelite.dto;
 
-import net.littlelite.model.Person;
+import lombok.Data;
 
+@Data
 public class PhoneDTO
 {
     protected String prefix;

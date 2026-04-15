@@ -13,9 +13,24 @@ import net.littlelite.dto.PhoneDTO;
 import net.littlelite.model.Person;
 import net.littlelite.model.Phone;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 
-@Mapper
+@Mapper(componentModel = MappingConstants.ComponentModel.JAKARTA)
 public interface SimpleMapper {
+
+    @Mapping(target = "phones", source = "phoneNumbers")
     PersonDTO personToPersonDTO(Person person);
+
+    @Mapping(target = "phoneNumbers", source = "phones")
+    @Mapping(target = "id", ignore = true)
+    Person personDTOToPerson(PersonDTO personDTO);
+
+    @Mapping(target = "person", ignore = true)
     PhoneDTO phoneToPhoneDTO(Phone phone);
+
+    @Mapping(target = "person", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    Phone phoneDTOToPhone(PhoneDTO phoneDTO);
+
 }
