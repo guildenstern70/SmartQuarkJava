@@ -14,17 +14,27 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import net.littlelite.config.SmartQuarkConfig;
 
 @Path("/")
 public class IndexController
 {
+    private final SmartQuarkConfig config;
+    private final Template index;
+
     @Inject
-    Template index;
+    public IndexController(Template index,
+                           SmartQuarkConfig config)
+    {
+        this.config = config;
+        this.index = index;
+    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     public TemplateInstance get()
     {
-        return index.instance();
+        return this.index.instance()
+                .data("version", this.config.version());
     }
 }
