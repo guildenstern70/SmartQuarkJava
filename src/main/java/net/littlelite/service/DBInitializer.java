@@ -1,10 +1,18 @@
+/*
+ * The SmartQuark Project Java Edition
+ * Copyright (c) Alessio Saltarin, 2026
+ * This software is licensed under ISC License
+ * See LICENSE
+ */
+
 package net.littlelite.service;
 
+import io.agroal.api.AgroalDataSource;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import net.littlelite.model.Person;
 
-import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,10 +28,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DBInitializer
 {
-    private final DataSource dataSource;
+    private final Instance<AgroalDataSource> dataSource;
 
     @Inject
-    public DBInitializer(DataSource dataSource) {
+    public DBInitializer(Instance<AgroalDataSource> dataSource)
+    {
         this.dataSource = dataSource;
     }
 
@@ -35,11 +44,17 @@ public class DBInitializer
         {
             log.info("Populating DB");
 
+            if (!dataSource.isResolvable())
+            {
+                log.warn("Datasource bean is not resolvable, skipping DB population.");
+                return;
+            }
+
             InputStream sqlStream = this.getClass().getClassLoader().getResourceAsStream("import.sql");
             if (sqlStream != null)
             {
                 log.info("Found import.sql on classpath, executing script...");
-                try (sqlStream; Connection conn = dataSource.getConnection())
+                try (sqlStream; Connection conn = dataSource.get().getConnection())
                 {
                     executeSqlScript(conn, sqlStream);
                     log.info("import.sql executed successfully");
@@ -96,4 +111,3 @@ public class DBInitializer
         conn.commit();
     }
 }
-
