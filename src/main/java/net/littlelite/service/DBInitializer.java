@@ -63,8 +63,8 @@ public class DBInitializer
 
     private void executeSqlScript(Connection conn, InputStream sqlStream) throws IOException, SQLException
     {
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(sqlStream, StandardCharsets.UTF_8)))
+        var sb = new StringBuilder();
+        try (var reader = new BufferedReader(new InputStreamReader(sqlStream, StandardCharsets.UTF_8)))
         {
             reader.lines().forEach(line ->
             {
@@ -77,14 +77,14 @@ public class DBInitializer
             });
         }
 
-        String script = sb.toString();
+        var script = sb.toString();
         String[] statements = script.split(";\\s*\\n");
         conn.setAutoCommit(false);
         try (Statement stmt = conn.createStatement())
         {
-            for (String s : statements)
+            for (var s : statements)
             {
-                String sql = s.trim();
+                var sql = s.trim();
                 if (sql.isEmpty())
                 {
                     continue;

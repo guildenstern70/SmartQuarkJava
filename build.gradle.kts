@@ -30,6 +30,7 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
     testImplementation("io.quarkus:quarkus-junit")
     testImplementation("io.rest-assured:rest-assured")
+    testImplementation("org.hamcrest:hamcrest:3.0")
 }
 
 group = "net.littlelite"

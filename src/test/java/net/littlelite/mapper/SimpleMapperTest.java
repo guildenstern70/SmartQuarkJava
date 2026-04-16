@@ -15,10 +15,10 @@ import net.littlelite.model.Person;
 import net.littlelite.model.Phone;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @QuarkusTest
 public class SimpleMapperTest
@@ -43,15 +43,15 @@ public class SimpleMapperTest
 
         PersonDTO dto = simpleMapper.personToPersonDTO(person);
 
-        assertNotNull(dto);
-        assertEquals(person.getName(), dto.getName());
-        assertEquals(person.getSurname(), dto.getSurname());
-        assertEquals(person.getAge(), dto.getAge());
-        assertEquals(1, dto.getPhones().size());
+        assertThat(dto, is(notNullValue()));
+        assertThat(dto.getName(), is(equalTo(person.getName())));
+        assertThat(dto.getSurname(), is(equalTo(person.getSurname())));
+        assertThat(dto.getAge(), is(equalTo(person.getAge())));
+        assertThat(dto.getPhones(), hasSize(1));
 
         PhoneDTO phoneDTO = dto.getPhones().iterator().next();
-        assertEquals(phone.getPrefix(), phoneDTO.getPrefix());
-        assertEquals(phone.getNumber(), phoneDTO.getNumber());
+        assertThat(phoneDTO.getPrefix(), is(equalTo(phone.getPrefix())));
+        assertThat(phoneDTO.getNumber(), is(equalTo(phone.getNumber())));
     }
 
     @Test
@@ -69,15 +69,15 @@ public class SimpleMapperTest
 
         Person person = simpleMapper.personDTOToPerson(dto);
 
-        assertNotNull(person);
-        assertEquals(dto.getName(), person.getName());
-        assertEquals(dto.getSurname(), person.getSurname());
-        assertEquals(dto.getAge(), person.getAge());
-        assertEquals(1, person.getPhoneNumbers().size());
+        assertThat(person, is(notNullValue()));
+        assertThat(person.getName(), is(equalTo(dto.getName())));
+        assertThat(person.getSurname(), is(equalTo(dto.getSurname())));
+        assertThat(person.getAge(), is(equalTo(dto.getAge())));
+        assertThat(person.getPhoneNumbers(), hasSize(1));
 
         Phone phone = person.getPhoneNumbers().iterator().next();
-        assertEquals(phoneDTO.getPrefix(), phone.getPrefix());
-        assertEquals(phoneDTO.getNumber(), phone.getNumber());
+        assertThat(phone.getPrefix(), is(equalTo(phoneDTO.getPrefix())));
+        assertThat(phone.getNumber(), is(equalTo(phoneDTO.getNumber())));
     }
 
     @Test
@@ -89,9 +89,9 @@ public class SimpleMapperTest
 
         PhoneDTO dto = simpleMapper.phoneToPhoneDTO(phone);
 
-        assertNotNull(dto);
-        assertEquals(phone.getPrefix(), dto.getPrefix());
-        assertEquals(phone.getNumber(), dto.getNumber());
+        assertThat(dto, is(notNullValue()));
+        assertThat(dto.getPrefix(), is(equalTo(phone.getPrefix())));
+        assertThat(dto.getNumber(), is(equalTo(phone.getNumber())));
     }
 
     @Test
@@ -103,8 +103,8 @@ public class SimpleMapperTest
 
         Phone phone = simpleMapper.phoneDTOToPhone(dto);
 
-        assertNotNull(phone);
-        assertEquals(dto.getPrefix(), phone.getPrefix());
-        assertEquals(dto.getNumber(), phone.getNumber());
+        assertThat(phone, is(notNullValue()));
+        assertThat(phone.getPrefix(), is(equalTo(dto.getPrefix())));
+        assertThat(phone.getNumber(), is(equalTo(dto.getNumber())));
     }
 }
