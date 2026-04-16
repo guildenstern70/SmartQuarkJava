@@ -14,6 +14,8 @@ import java.util.Set;
 @Data
 public class PersonDTO
 {
+    protected Long id;
+
     protected String name;
     protected String surname;
     protected int age;
