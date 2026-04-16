@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 public class PhoneDTO
 {
+    protected Long id;
+
     protected String prefix;
     protected String number;
     protected PersonDTO person;
