@@ -11,8 +11,28 @@ quarkus:
     color: true
   datasource:
     db-kind: postgresql
+  smallrye-health:
+    ui:
+      always-include: true
+  smallrye-graphql:
+    ui:
+      always-include: true
   log:
     level: INFO
     console:
       format: "%d{HH:mm:ss} %-5p [%c{2.}] %s%e%n"
       level: DEBUG
+mp:
+  openapi:
+    extensions:
+      smallrye:
+        info:
+          title: SmartQuark API
+          version: ${smartquark.version}
+          description: SmartQuark API
+          contact:
+            email: alessiosaltarin@gmail.com
+            name: Alessio Saltarin
+    scan:
+      exclude:
+        classes: net.littlelite.controller.web.IndexController

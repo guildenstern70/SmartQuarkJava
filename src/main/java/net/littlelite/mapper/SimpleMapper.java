@@ -26,10 +26,7 @@ public interface SimpleMapper {
     @Mapping(target = "id", ignore = true)
     Person personDTOToPerson(PersonDTO personDTO);
 
-    @Mapping(target = "person", ignore = true)
     PhoneDTO phoneToPhoneDTO(Phone phone);
-
-    @Mapping(target = "person", ignore = true)
     @Mapping(target = "id", ignore = true)
     Phone phoneDTOToPhone(PhoneDTO phoneDTO);
 

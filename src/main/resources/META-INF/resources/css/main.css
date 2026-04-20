@@ -1,0 +1,141 @@
+/* main.css - modernized site styles
+   Place under src/main/resources/META-INF/resources/css/main.css
+*/
+
+:root {
+    --brand-600: #1f6feb;
+    --brand-400: #4b9bff;
+    --muted: #6c757d;
+    --bg: #f6f9fc;
+    --card-bg: #ffffff;
+}
+
+body {
+    font-family: 'Rubik', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+    color: #222;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Make the page a full-height column so we can center the main area vertically */
+html, body {
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.site-header .navbar {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    background: transparent;
+}
+
+.brand-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+.brand-text {
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    font-size: 1.05rem;
+}
+
+.main {
+    /* allow footer to remain after the main area; make main take available space and center its content */
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.hero {
+    background: linear-gradient(90deg, rgba(31,111,235,0.06), rgba(75,155,255,0.03));
+    border: 1px solid rgba(31,111,235,0.06);
+    padding: 2.25rem;
+    margin-top: 1rem;
+}
+
+/* Ensure hero and features sections always match width */
+.hero,
+.features {
+    width: 100%;
+    max-width: 1100px; /* consistent container width */
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero .display-6 {
+    color: #0b2a66;
+}
+
+.hero-illustration {
+    max-width: 320px;
+}
+
+.features .card {
+    border: none;
+    background: var(--card-bg);
+    transition: transform .2s ease, box-shadow .2s ease;
+    cursor: pointer; /* show hand cursor */
+    user-select: none; /* avoid text selection when clicking the card */
+}
+
+.features .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 22px rgba(29,40,60,0.08);
+}
+
+/* Ensure the card body also shows pointer when hovering internal elements */
+.features .card .card-body {
+    cursor: pointer;
+}
+
+.quick-link {
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.35rem 0;
+    display: inline-block;
+}
+.quick-link:hover {
+    text-decoration: none;
+    color: var(--brand-600);
+}
+
+footer {
+    opacity: 0.9;
+}
+
+/* Footer contact link: white color, no underline, no hover/focus color changes */
+footer .badge a,
+footer .badge a:link,
+footer .badge a:visited {
+    color: #ffffff;
+    text-decoration: none;
+}
+footer .badge a:hover,
+footer .badge a:focus,
+footer .badge a:active {
+    color: #ffffff;
+    text-decoration: none;
+    outline: none;
+}
+
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .hero {
+        padding: 1.5rem;
+    }
+    .brand-text { font-size: 1rem; }
+}
+
