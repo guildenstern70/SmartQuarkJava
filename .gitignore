@@ -17,6 +17,9 @@ bin/
 # NetBeans
 nb-configuration.xml
 
+# IBM Bob
+.bob/
+
 # Visual Studio Code
 .vscode
 .factorypath
