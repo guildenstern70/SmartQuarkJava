@@ -1,79 +1,99 @@
-# smartquark-java
+## SmartQuark [Java Edition]
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/904bd2e27151424ea8c1a9070e1e2732)](https://app.codacy.com/gh/guildenstern70/SmartQuarkJava/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](https://opensource.org/licenses/ISC)
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+A template project featuring Quarkus written in Java. 
+Looking for the Kotlin version? Check out the [Kotlin Edition](https://github.com/guildenstern70/SmartQuark)
 
-## Running the application in dev mode
+![screenshot.png](screenshot.png)
 
-You can run your application in dev mode that enables live coding using:
+### Development mode
 
-```shell script
-./gradlew quarkusDev
-```
+    gradle quarkusDev
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+This project makes use of Quarkus Dev Services that allow you to run a Postgres database in a container.
+To run the project and the database, you need to have Docker or Podman installed and running.
+There is also a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/
 
-## Packaging and running the application
+### Packaging and running the application
 
-The application can be packaged using:
+The application can be packaged using
 
-```shell script
-./gradlew build
-```
+    gradle quarkusBuild -Dquarkus.package.type=uber-jar
 
-It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
+It produces the `smartquark-[version]-runner.jar` file in the `build` directory. Run with
 
-The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
+    java -jar smartquark-[version]-runner.jar
 
-If you want to build an _über-jar_, execute the following command:
+### Creating and running in a Java Container
 
-```shell script
-./gradlew build -Dquarkus.package.jar.type=uber-jar
-```
+    gradle quarkusBuild
+    docker build -f src/main/docker/Dockerfile.jvm -t guildenstern70/smartquarkus .
+    docker run -i --rm -p 8080:8080 -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" guildenstern70/smartquarkus
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
+### Creating a native executable
 
-## Creating a native executable
+It is recommended to create an external Postgres database and specify its coordinates as
+environment variables, as shown in the 'run-native-example.sh' script.
 
-You can create a native executable using:
+First, download and install GraalVM CE Java 21.
 
-```shell script
-./gradlew build -Dquarkus.native.enabled=true
-```
+Install native extensions
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+    cd /Library/Java/JavaVirtualMachines/graalvm-21.jdk/Contents/Home/bin
+    ./gu install native-image
 
-```shell script
-./gradlew build -Dquarkus.native.enabled=true -Dquarkus.native.container-build=true
-```
+Now, you can create a native executable using: `./build-native`.
+You can then execute your native executable with `run-native.sh` script.
 
-You can then execute your native executable with: `./build/smartquark-java-0.0.1-runner`
+### Creating a container
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/gradle-tooling>.
+Build Docker image using
 
-## Related Guides
+    docker build --platform linux/amd64 -f src/main/docker/Dockerfile.jvm -t guildenstern70/smart-quark .
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
+You can test it with
 
-## Provided Code
+    docker run -i --rm -p 8080:8080 guildenstern70/smart-quark
 
-### Hibernate ORM
+### Creating a container with a native executable
 
-Create your first JPA entity
+Unless you are using the same Linux OS of the target deployment machine, if you need to
+deploy in Docker, you need also to "build" in Docker. Doing so, Docker requires a lot of resources.
 
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
+Be sure to have Docker with at least 8 GB and 6 CPUs.
+
+Also, you may adjust the XMX JVM value in
+
+    quarkus.native.native-image-xmx
+
+property (application.yaml). This value should never be < 4g.
+
+Prepare a Linux runnable exec and store in /build/smartquark-[version]-runner running a command
+like:
+
+    ./build-docker-native-example.sh
+
+This command prepares also a specific Dockerfile inside
+
+    src/main/docker
+
+To build the Docker image:
+
+    docker build -f src/main/docker/Dockerfile.native -t guildenstern70/smart-quark .
+
+To run it:
+
+    ./run-docker-native
+
+(the above script calls an environment file to pass needed environment variables)
 
 
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
+### FAQ
+
+Q: I am getting an error like "Unable to find datasource '<default>' for persistence unit '<default>'".
+A: You must have a running Docker or Podman instance, as the project relies on Quarkus Dev Services to run a Postgres database in a container.
+Make sure Docker or Podman is installed and running on your machine.
 
 
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
