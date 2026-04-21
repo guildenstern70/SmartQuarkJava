@@ -27,6 +27,9 @@ public class StartupService
     private final SmartQuarkConfig config;
     private final DBInitializer dbInitializer;
 
+    @ConfigProperty(name = "quarkus.http.port")
+    int port;
+
     @Inject
     public StartupService(SmartQuarkConfig config,
                           DBInitializer dbInitializer)
@@ -34,9 +37,6 @@ public class StartupService
         this.config = config;
         this.dbInitializer = dbInitializer;
     }
-
-    @ConfigProperty(name = "quarkus.http.port")
-    int port;
 
     void onStart(@Observes StartupEvent ev)
     {
