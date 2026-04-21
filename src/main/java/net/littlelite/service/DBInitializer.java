@@ -40,40 +40,40 @@ public class DBInitializer
     {
         var personsOnDb = Person.count();
 
-        if (personsOnDb == 0L)
-        {
-            log.info("Populating DB");
-
-            if (!dataSource.isResolvable())
-            {
-                log.warn("Datasource bean is not resolvable, skipping DB population.");
-                return;
-            }
-
-            InputStream sqlStream = this.getClass().getClassLoader().getResourceAsStream("import.sql");
-            if (sqlStream != null)
-            {
-                log.info("Found import.sql on classpath, executing script...");
-                try (sqlStream; Connection conn = dataSource.get().getConnection())
-                {
-                    executeSqlScript(conn, sqlStream);
-                    log.info("import.sql executed successfully");
-                    return;
-                } catch (Exception ex) {
-                    log.error("Failed to execute import.sql, falling back to programmatic population", ex);
-                }
-            }
-            else
-            {
-                log.info("import.sql not found on classpath, using programmatic population");
-            }
-            log.info("Done programmatic population.");
-        }
-        else
+        if (personsOnDb > 0L)
         {
             log.info("DB already populated, skipping population step.");
             log.info("There are {} persons on DB", personsOnDb);
+            return;
         }
+
+        log.info("Populating DB");
+
+        if (!dataSource.isResolvable())
+        {
+            log.warn("Datasource bean is not resolvable, skipping DB population.");
+            return;
+        }
+
+        InputStream sqlStream = this.getClass().getClassLoader().getResourceAsStream("import.sql");
+        if (sqlStream != null)
+        {
+            log.info("Found import.sql on classpath, executing script...");
+            try (sqlStream; Connection conn = dataSource.get().getConnection())
+            {
+                executeSqlScript(conn, sqlStream);
+                log.info("import.sql executed successfully");
+                return;
+            } catch (Exception ex) {
+                log.error("Failed to execute import.sql, falling back to programmatic population", ex);
+            }
+        }
+        else
+        {
+            log.info("import.sql not found on classpath, using programmatic population");
+        }
+        log.info("Done programmatic population.");
+
     }
 
     private void executeSqlScript(Connection conn, InputStream sqlStream) throws IOException, SQLException
