@@ -61,7 +61,7 @@ public class PhoneService
                 .setParameter(1, nextId)
                 .setParameter(2, phoneDTO.getPrefix())
                 .setParameter(3, phoneDTO.getNumber())
-                .setParameter(4, person == null ? null : person.id)
+                .setParameter(4, person == null ? null : person.getId())
                 .executeUpdate();
 
         Phone phone = getRequiredPhone(nextId);

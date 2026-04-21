@@ -96,7 +96,7 @@ public class PersonServiceTest
         persisted.getPhoneNumbers().forEach(phone ->
         {
             assertThat(phone.getPerson(), is(notNullValue()));
-            assertThat(phone.getPerson().id, is(equalTo(created.getId())));
+            assertThat(phone.getPerson().getId(), is(equalTo(created.getId())));
         });
     }
 

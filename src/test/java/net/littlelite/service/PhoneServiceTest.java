@@ -87,7 +87,7 @@ public class PhoneServiceTest
         Phone persisted = Phone.findById(created.getId());
         assertThat(persisted, is(notNullValue()));
         assertThat(persisted.getPerson(), is(notNullValue()));
-        assertThat(persisted.getPerson().id, is(equalTo(personId)));
+        assertThat(persisted.getPerson().getId(), is(equalTo(personId)));
     }
 
     @Test
@@ -114,8 +114,8 @@ public class PhoneServiceTest
     {
         List<Person> persons = Person.listAll();
         assertThat(persons.size() >= 2, is(true));
-        Long oldPersonId = persons.get(0).id;
-        Long newPersonId = persons.get(1).id;
+        Long oldPersonId = persons.get(0).getId();
+        Long newPersonId = persons.get(1).getId();
 
         PhoneDTO createInput = new PhoneDTO();
         createInput.setPrefix("+39");
@@ -140,7 +140,7 @@ public class PhoneServiceTest
         assertThat(persisted.getPrefix(), is(equalTo("+1")));
         assertThat(persisted.getNumber(), is(equalTo("888888888")));
         assertThat(persisted.getPerson(), is(notNullValue()));
-        assertThat(persisted.getPerson().id, is(equalTo(newPersonId)));
+        assertThat(persisted.getPerson().getId(), is(equalTo(newPersonId)));
     }
 
     @Test
@@ -169,7 +169,7 @@ public class PhoneServiceTest
     {
         Person person = Person.find("order by id").firstResult();
         assertThat(person, is(notNullValue()));
-        return person.id;
+        return person.getId();
     }
 
     private PersonDTO buildPersonDTO(Long personId)

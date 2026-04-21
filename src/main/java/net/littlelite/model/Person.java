@@ -8,6 +8,7 @@
 package net.littlelite.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,8 +22,12 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude = "phoneNumbers")
 @Entity
-public class Person extends PanacheEntity
+public class Person extends PanacheEntityBase
 {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
+
     protected String name;
 
     protected String surname;

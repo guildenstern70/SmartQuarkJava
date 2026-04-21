@@ -23,11 +23,12 @@ public interface SimpleMapper {
     PersonDTO personToPersonDTO(Person person);
 
     @Mapping(target = "phoneNumbers", source = "phones")
-    @Mapping(target = "id", ignore = true)
     Person personDTOToPerson(PersonDTO personDTO);
 
+    @Mapping(target = "person", ignore = true)
     PhoneDTO phoneToPhoneDTO(Phone phone);
-    @Mapping(target = "id", ignore = true)
+
+    @Mapping(target = "person", ignore = true)
     Phone phoneDTOToPhone(PhoneDTO phoneDTO);
 
 }
