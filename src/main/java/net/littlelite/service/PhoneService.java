@@ -48,6 +48,12 @@ public class PhoneService
         return simpleMapper.phoneToPhoneDTO(phone);
     }
 
+    public PhoneDTO findById(long id)
+    {
+        Phone phone = getRequiredPhone(id);
+        return simpleMapper.phoneToPhoneDTO(phone);
+    }
+
     @Transactional
     public PhoneDTO create(PhoneDTO phoneDTO)
     {
@@ -86,6 +92,15 @@ public class PhoneService
     public PhoneDTO delete(PhoneDTO phoneDTO)
     {
         Long id = getRequiredId(phoneDTO);
+        Phone existing = getRequiredPhone(id);
+        PhoneDTO deleted = simpleMapper.phoneToPhoneDTO(existing);
+        existing.delete();
+        return deleted;
+    }
+
+    @Transactional
+    public PhoneDTO delete(long id)
+    {
         Phone existing = getRequiredPhone(id);
         PhoneDTO deleted = simpleMapper.phoneToPhoneDTO(existing);
         existing.delete();

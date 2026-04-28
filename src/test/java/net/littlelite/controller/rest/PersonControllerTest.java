@@ -23,12 +23,12 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 
 @QuarkusTest
-public class PersonControllerTest
+class PersonControllerTest
 {
     private static final String BASE_PATH = "/api/persons";
 
     @Test
-    public void testFindAllReturnsListOfPersons()
+    void testFindAllReturnsListOfPersons()
     {
         given()
                 .when()
@@ -44,7 +44,7 @@ public class PersonControllerTest
 
     @Test
     @TestTransaction
-    public void testCreatePersonWithoutPhonesReturnsCreatedPerson()
+    void testCreatePersonWithoutPhonesReturnsCreatedPerson()
     {
         PersonDTO newPerson = new PersonDTO();
         newPerson.setName("TestJohn");
@@ -57,7 +57,7 @@ public class PersonControllerTest
                 .when()
                 .post(BASE_PATH)
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .contentType(ContentType.JSON)
                 .body("id", notNullValue())
                 .body("name", equalTo("TestJohn"))
@@ -67,7 +67,7 @@ public class PersonControllerTest
 
     @Test
     @TestTransaction
-    public void testCreatePersonWithPhonesReturnsCreatedPersonWithPhones()
+    void testCreatePersonWithPhonesReturnsCreatedPersonWithPhones()
     {
         PhoneDTO phone1 = new PhoneDTO();
         phone1.setPrefix("+39");
@@ -89,7 +89,7 @@ public class PersonControllerTest
                 .when()
                 .post(BASE_PATH)
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .contentType(ContentType.JSON)
                 .body("id", notNullValue())
                 .body("name", equalTo("TestJane"))
@@ -100,7 +100,7 @@ public class PersonControllerTest
 
     @Test
     @TestTransaction
-    public void testUpdatePersonModifiesExistingPerson()
+    void testUpdatePersonModifiesExistingPerson()
     {
         PersonDTO newPerson = new PersonDTO();
         newPerson.setName("TestOriginal");
@@ -113,7 +113,7 @@ public class PersonControllerTest
                 .when()
                 .post(BASE_PATH)
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract()
                 .path("id");
 
@@ -138,7 +138,7 @@ public class PersonControllerTest
     }
 
     @Test
-    public void testUpdateNonExistentPersonReturnsNotFound()
+    void testUpdateNonExistentPersonReturnsNotFound()
     {
         PersonDTO nonExistent = new PersonDTO();
         nonExistent.setId(Long.MAX_VALUE);
@@ -157,7 +157,7 @@ public class PersonControllerTest
 
     @Test
     @TestTransaction
-    public void testDeletePersonRemovesExistingPerson()
+    void testDeletePersonRemovesExistingPerson()
     {
         PersonDTO newPerson = new PersonDTO();
         newPerson.setName("TestToDelete");
@@ -170,7 +170,7 @@ public class PersonControllerTest
                 .when()
                 .post(BASE_PATH)
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract()
                 .path("id");
 
@@ -178,10 +178,8 @@ public class PersonControllerTest
         deleteDTO.setId(createdId.longValue());
 
         given()
-                .contentType(ContentType.JSON)
-                .body(deleteDTO)
                 .when()
-                .delete(BASE_PATH)
+                .delete(BASE_PATH + "/" + createdId)
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
@@ -191,23 +189,20 @@ public class PersonControllerTest
     }
 
     @Test
-    public void testDeleteNonExistentPersonReturnsNotFound()
+    void testDeleteNonExistentPersonReturnsNotFound()
     {
-        PersonDTO nonExistent = new PersonDTO();
-        nonExistent.setId(Long.MAX_VALUE);
+        long nonExistentId = Long.MAX_VALUE;
 
         given()
-                .contentType(ContentType.JSON)
-                .body(nonExistent)
                 .when()
-                .delete(BASE_PATH)
+                .delete(BASE_PATH + "/" + nonExistentId)
                 .then()
                 .statusCode(404);
     }
 
     @Test
     @TestTransaction
-    public void testFindByIdReturnsExistingPerson()
+    void testFindByIdReturnsExistingPerson()
     {
         PersonDTO newPerson = new PersonDTO();
         newPerson.setName("TestFindMe");
@@ -220,7 +215,7 @@ public class PersonControllerTest
                 .when()
                 .post(BASE_PATH)
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract()
                 .path("id");
 
@@ -228,10 +223,8 @@ public class PersonControllerTest
         searchDTO.setId(createdId.longValue());
 
         given()
-                .contentType(ContentType.JSON)
-                .body(searchDTO)
                 .when()
-                .post(BASE_PATH + "/by-id")
+                .get(BASE_PATH + "/" + createdId)
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
@@ -242,23 +235,20 @@ public class PersonControllerTest
     }
 
     @Test
-    public void testFindByIdWithNonExistentIdReturnsNotFound()
+    void testFindByIdWithNonExistentIdReturnsNotFound()
     {
-        PersonDTO searchDTO = new PersonDTO();
-        searchDTO.setId(Long.MAX_VALUE);
+        long id = Long.MAX_VALUE;
 
         given()
-                .contentType(ContentType.JSON)
-                .body(searchDTO)
                 .when()
-                .post(BASE_PATH + "/by-id")
+                .get(BASE_PATH + "/" + id)
                 .then()
                 .statusCode(404);
     }
 
     @Test
     @TestTransaction
-    public void testCreateUpdateDeleteWorkflowIsIdempotent()
+    void testCreateUpdateDeleteWorkflowIsIdempotent()
     {
         PersonDTO newPerson = new PersonDTO();
         newPerson.setName("TestWorkflow");
@@ -271,7 +261,7 @@ public class PersonControllerTest
                 .when()
                 .post(BASE_PATH)
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract()
                 .path("id");
 
@@ -290,22 +280,18 @@ public class PersonControllerTest
                 .statusCode(200)
                 .body("age", equalTo(29));
 
-        PersonDTO deleteDTO = new PersonDTO();
-        deleteDTO.setId(createdId.longValue());
+        var id = createdId.longValue();
 
         given()
-                .contentType(ContentType.JSON)
-                .body(deleteDTO)
                 .when()
-                .delete(BASE_PATH)
+                .delete(BASE_PATH + "/" + id)
                 .then()
                 .statusCode(200);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(deleteDTO)
                 .when()
-                .post(BASE_PATH + "/by-id")
+                .get(BASE_PATH + "/" + id)
                 .then()
                 .statusCode(404);
     }

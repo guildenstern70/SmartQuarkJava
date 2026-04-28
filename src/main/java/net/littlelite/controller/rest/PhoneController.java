@@ -8,22 +8,13 @@
 package net.littlelite.controller.rest;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import net.littlelite.dto.PhoneDTO;
 import net.littlelite.service.PhoneService;
 
-import java.util.List;
-
 @Path("/api/phones")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class PhoneController
 {
     private final PhoneService phoneService;
@@ -35,33 +26,50 @@ public class PhoneController
     }
 
     @GET
-    public List<PhoneDTO> findAll()
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findAll()
     {
-        return this.phoneService.findAll();
+        var phones = this.phoneService.findAll();
+        return Response.ok(phones).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    public Response findById(@PathParam("id") Long id)
+    {
+        var phone = this.phoneService.findById(id);
+        if (phone == null)
+        {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(phone).build();
     }
 
     @POST
-    public PhoneDTO create(PhoneDTO phoneDTO)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response create(PhoneDTO phoneDTO)
     {
-        return this.phoneService.create(phoneDTO);
+        var created = this.phoneService.create(phoneDTO);
+        return Response.ok(created).build();
     }
 
     @PUT
-    public PhoneDTO update(PhoneDTO phoneDTO)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(PhoneDTO phoneDTO)
     {
-        return this.phoneService.update(phoneDTO);
+        var updated = this.phoneService.update(phoneDTO);
+        return Response.ok(updated).build();
     }
 
     @DELETE
-    public PhoneDTO delete(PhoneDTO phoneDTO)
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response delete(PhoneDTO phoneDTO)
     {
-        return this.phoneService.delete(phoneDTO);
+        var deleted = this.phoneService.delete(phoneDTO.getId());
+        return Response.ok(deleted).build();
     }
 
-    @POST
-    @Path("/by-id")
-    public PhoneDTO findById(PhoneDTO phoneDTO)
-    {
-        return this.phoneService.findById(phoneDTO);
-    }
 }

@@ -8,22 +8,16 @@
 package net.littlelite.controller.rest;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import net.littlelite.dto.PersonDTO;
 import net.littlelite.service.PersonService;
 
+import java.net.URI;
 import java.util.List;
 
 @Path("/api/persons")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class PersonController
 {
     private final PersonService personService;
@@ -35,33 +29,49 @@ public class PersonController
     }
 
     @GET
-    public List<PersonDTO> findAll()
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findAll()
     {
-        return this.personService.findAll();
+        return Response.ok(this.personService.findAll()).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findById(@PathParam("id") Long id)
+    {
+        var found = this.personService.findById(id);
+        if (found == null)
+        {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(found).build();
     }
 
     @POST
-    public PersonDTO create(PersonDTO personDTO)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response create(PersonDTO personDTO)
     {
-        return this.personService.create(personDTO);
+        var created = this.personService.create(personDTO);
+        var location = URI.create(String.format("/api/persons/%d", created.getId()))    ;
+        return Response.created(location).entity(created).build();
     }
 
     @PUT
-    public PersonDTO update(PersonDTO personDTO)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(PersonDTO personDTO)
     {
-        return this.personService.update(personDTO);
+        var updated = this.personService.update(personDTO);
+        return Response.ok(updated).build();
     }
 
     @DELETE
-    public PersonDTO delete(PersonDTO personDTO)
+    @Path("/{id}")
+    public PersonDTO delete(@PathParam("id") Long id)
     {
-        return this.personService.delete(personDTO);
+        return this.personService.delete(id);
     }
 
-    @POST
-    @Path("/by-id")
-    public PersonDTO findById(PersonDTO personDTO)
-    {
-        return this.personService.findById(personDTO);
-    }
 }

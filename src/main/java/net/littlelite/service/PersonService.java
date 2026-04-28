@@ -37,6 +37,12 @@ public class PersonService
                 .toList();
     }
 
+    public PersonDTO findById(long id)
+    {
+        Person person = getRequiredPerson(id);
+        return simpleMapper.personToPersonDTO(person);
+    }
+
     public PersonDTO findById(PersonDTO personDTO)
     {
         Long id = getRequiredId(personDTO);
@@ -73,6 +79,15 @@ public class PersonService
     public PersonDTO delete(PersonDTO personDTO)
     {
         Long id = getRequiredId(personDTO);
+        Person existing = getRequiredPerson(id);
+        PersonDTO deleted = simpleMapper.personToPersonDTO(existing);
+        existing.delete();
+        return deleted;
+    }
+
+    @Transactional
+    public PersonDTO delete(long id)
+    {
         Person existing = getRequiredPerson(id);
         PersonDTO deleted = simpleMapper.personToPersonDTO(existing);
         existing.delete();
